@@ -47,6 +47,7 @@ function SideMenu() {
                 <p>Dashboard HelioAndes</p>
               </a>
             </li>
+            {/* Dejamos listos los link para su uso con #*/}
             <li className="nav-item">
               <a href="#lista-servicios" className="nav-link">
                 <i className="nav-icon fas fa-tools" />

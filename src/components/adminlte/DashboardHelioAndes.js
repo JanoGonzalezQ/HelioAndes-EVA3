@@ -141,6 +141,7 @@ function DashboardHelioAndes({ onNavigate }) {
             <div className="row">
               {/* Columna Servicios */}
               <div className="col-md-6" id="lista-servicios">
+                
                 {/* Listado de servicios */}
                 <div className="card card-primary card-outline">
                   <div className="card-header">

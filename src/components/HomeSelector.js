@@ -27,7 +27,7 @@ function HomeSelector({ onNavigate }) {
               src={logoHelio}
               alt="HelioAndes Logo"
               className="rounded-pill"
-              style={{ width: "1000px", marginBottom: "30px" }}
+              style={{ width: "1000px", maxWidth: "100%", marginBottom: "30px"}}
           />
 
 

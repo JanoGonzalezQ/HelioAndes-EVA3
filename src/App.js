@@ -26,7 +26,7 @@ function App() {
 
   // 2) Vista Dashboard AdminLTE
   if (view === "dashboard") {
-    return <DashboardHelioAndes onNavigate={setView} />;
+    return <DashboardHelioAndes onNavigate={setView} />; // sirve para CAMBIAR la vista actual de la aplicación.
   }
 
   // 3) Vista Landing principal
