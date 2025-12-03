@@ -185,6 +185,8 @@ function DashboardHelioAndes({ onNavigate }) {
                 </div>
 
                 {/* Columna Planes */}
+                {/* React usa key para identificar cada fila de forma única. */}
+                {/* onClick={() => setServicioSeleccionado(servicio)} Cuando haces clic en una fila, se guarda ese servicio como seleccionado. */}
                 <div className="col-md-6" id="lista-planes">
                   <div className="card card-success card-outline">
                     <div className="card-header">
@@ -207,7 +209,7 @@ function DashboardHelioAndes({ onNavigate }) {
                           ) : (
                             planes.map((plan) => (
                               <tr
-                                key={plan.id}
+                                key={plan.id}  
                                 onClick={() => setPlanSeleccionado(plan)}
                                 style={{ cursor: "pointer" }}
                                 className={
@@ -215,6 +217,8 @@ function DashboardHelioAndes({ onNavigate }) {
                                     ? "table-active"
                                     : ""
                                 }
+                                
+
                               >
                                 <td>{plan.nombre}</td>
                                 <td>{plan.potencia}</td>
