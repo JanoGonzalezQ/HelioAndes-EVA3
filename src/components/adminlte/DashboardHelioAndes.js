@@ -5,38 +5,42 @@ import NavBarPrincipal from "./NavBarPrincipal";
 import SideMenu from "./SideMenu";
 import DescripcionFooter from "../footer";
 
-// Aqui esta la URL creada de Mockoon
+// URL base de la API Mockoon
 const API_BASE_URL = "http://localhost:3001";
 
 function DashboardHelioAndes({ onNavigate }) {
-  // Listas desde la API
+  // ✅ Listas que vienen desde la API (arrays completos)
   const [servicios, setServicios] = useState([]);
   const [planes, setPlanes] = useState([]);
 
-  // Elementos seleccionados
+  // ✅ Elementos seleccionados para mostrar en el detalle
+  // Cuando hago clic en una fila, guardo aquí el objeto completo
   const [servicioSeleccionado, setServicioSeleccionado] = useState(null);
   const [planSeleccionado, setPlanSeleccionado] = useState(null);
 
-  // Estado de carga y error
+  // Estados de apoyo: carga y error
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Cargar datos con Axios
+  // ✅ useEffect: se ejecuta una sola vez al cargar el componente
+  // Aquí llamo a la API (Mockoon) para traer servicios y planes
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Llamadas de las uri de mockoon
+        // Llamadas a las URI de Mockoon en paralelo
         const [resServicios, resPlanes] = await Promise.all([
           axios.get(`${API_BASE_URL}/servicios`),
           axios.get(`${API_BASE_URL}/planes`)
         ]);
 
+        // Guardo los resultados completos en estado
         setServicios(resServicios.data);
         setPlanes(resPlanes.data);
 
+        // Dejo seleccionado el primer servicio y el primer plan por defecto
         if (resServicios.data.length > 0) {
           setServicioSeleccionado(resServicios.data[0]);
         }
@@ -56,7 +60,7 @@ function DashboardHelioAndes({ onNavigate }) {
     };
 
     fetchData();
-  }, []);
+  }, []); // ← [] significa que se ejecuta solo una vez al montar el componente
 
   return (
     <>
@@ -81,6 +85,7 @@ function DashboardHelioAndes({ onNavigate }) {
                 </div>
               </div>
 
+              {/* Mensaje mientras trae datos de la API */}
               {loading && (
                 <div className="row">
                   <div className="col-12">
@@ -89,6 +94,7 @@ function DashboardHelioAndes({ onNavigate }) {
                 </div>
               )}
 
+              {/* Mensaje de error si la API falla */}
               {error && (
                 <div className="row">
                   <div className="col-12">
@@ -103,8 +109,11 @@ function DashboardHelioAndes({ onNavigate }) {
           <section className="content">
             <div className="container-fluid">
               <div className="row">
-                {/* Columna Servicios */}
+                {/* ───────────────────────────────────────
+                    COLUMNA SERVICIOS (lista + detalle)
+                    ─────────────────────────────────────── */}
                 <div className="col-md-6" id="lista-servicios">
+                  {/* Listado de servicios */}
                   <div className="card card-primary card-outline">
                     <div className="card-header">
                       <h3 className="card-title">Servicios registrados</h3>
@@ -119,6 +128,7 @@ function DashboardHelioAndes({ onNavigate }) {
                           </tr>
                         </thead>
                         <tbody>
+                          {/* Si no hay datos y no está cargando, muestro mensaje */}
                           {servicios.length === 0 && !loading ? (
                             <tr>
                               <td colSpan="3">No hay servicios cargados.</td>
@@ -126,9 +136,13 @@ function DashboardHelioAndes({ onNavigate }) {
                           ) : (
                             servicios.map((servicio) => (
                               <tr
-                                key={servicio.id}
+                                key={servicio.id} // React identifica la fila por id
+                              
+                                // Cuando hago clic en esta fila, guardo ese servicio
+                                // en "servicioSeleccionado".
                                 onClick={() => setServicioSeleccionado(servicio)}
                                 style={{ cursor: "pointer" }}
+                                // Si este servicio es el seleccionado, pinto la fila activa
                                 className={
                                   servicioSeleccionado?.id === servicio.id
                                     ? "table-active"
@@ -146,7 +160,7 @@ function DashboardHelioAndes({ onNavigate }) {
                     </div>
                   </div>
 
-                  {/* Detalle servicio */}
+                  {/* Detalle servicio (lee lo que haya en servicioSeleccionado) */}
                   <div className="card">
                     <div className="card-header">
                       <h3 className="card-title">Detalle del servicio</h3>
@@ -154,6 +168,7 @@ function DashboardHelioAndes({ onNavigate }) {
                     <div className="card-body">
                       {servicioSeleccionado ? (
                         <>
+                          {/* Todo esto se alimenta del estado servicioSeleccionado */}
                           <h4>{servicioSeleccionado.nombre}</h4>
                           <p className="text-muted mb-1">
                             <strong>Tipo: </strong>
@@ -184,10 +199,11 @@ function DashboardHelioAndes({ onNavigate }) {
                   </div>
                 </div>
 
-                {/* Columna Planes */}
-                {/* React usa key para identificar cada fila de forma única. */}
-                {/* onClick={() => setServicioSeleccionado(servicio)} Cuando haces clic en una fila, se guarda ese servicio como seleccionado. */}
+                {/* ───────────────────────────────────────
+                    COLUMNA PLANES (lista + detalle)
+                    ─────────────────────────────────────── */}
                 <div className="col-md-6" id="lista-planes">
+                  {/* Listado de planes */}
                   <div className="card card-success card-outline">
                     <div className="card-header">
                       <h3 className="card-title">Planes registrados</h3>
@@ -209,7 +225,9 @@ function DashboardHelioAndes({ onNavigate }) {
                           ) : (
                             planes.map((plan) => (
                               <tr
-                                key={plan.id}  
+                                key={plan.id} // id único del plan
+                                //  Igual que en servicios:
+                                // al hacer clic guardo el plan completo en "planSeleccionado"
                                 onClick={() => setPlanSeleccionado(plan)}
                                 style={{ cursor: "pointer" }}
                                 className={
@@ -217,8 +235,6 @@ function DashboardHelioAndes({ onNavigate }) {
                                     ? "table-active"
                                     : ""
                                 }
-                                
-
                               >
                                 <td>{plan.nombre}</td>
                                 <td>{plan.potencia}</td>
@@ -231,7 +247,7 @@ function DashboardHelioAndes({ onNavigate }) {
                     </div>
                   </div>
 
-                  {/* Detalle plan */}
+                  {/* Detalle plan (lee lo que haya en planSeleccionado) */}
                   <div className="card">
                     <div className="card-header">
                       <h3 className="card-title">Detalle del plan</h3>
@@ -279,6 +295,7 @@ function DashboardHelioAndes({ onNavigate }) {
         </div>
       </div>
 
+      {/* Footer reutilizado */}
       <div id="footer">
         <DescripcionFooter />
       </div>
